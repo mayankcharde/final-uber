@@ -27,13 +27,11 @@ app.use(cors({
             'http://localhost:5173',
             'http://localhost:5174',
             'https://mayank-murex.vercel.app',
-            'https://mayank-5.onrender.com',
-            'https://graceful-chaja-df272e.netlify.app',
-            'https://final-uber-6.onrender.com'
+            'https://mayank-5.onrender.com'
         ];
-        
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, origin);
+        // Allow requests with no origin (like mobile apps, curl requests)
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
         } else {
             console.log('CORS blocked origin:', origin);
             callback(new Error('Not allowed by CORS'));
@@ -46,6 +44,20 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Enable CORS for all origins fallback (comment this out when security is critical)
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    
+    // Handle preflight OPTIONS request
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+    next();
+});
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -102,12 +114,9 @@ app.get('/debug', (req, res) => {
                 'http://localhost:5173',
                 'http://localhost:5174',
                 'https://mayank-murex.vercel.app',
-                'https://mayank-5.onrender.com',
-                'https://graceful-chaja-df272e.netlify.app',
-                'https://final-uber-6.onrender.com'
+                'https://mayank-5.onrender.com'
             ],
-            developmentMode: process.env.NODE_ENV === 'development',
-            mode: process.env.NODE_ENV || 'not set'
+            mode: process.env.NODE_ENV !== 'production' ? 'development' : 'production'
         },
         routes: {
             userRoutes: '/api/users',
