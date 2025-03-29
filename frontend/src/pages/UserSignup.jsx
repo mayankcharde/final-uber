@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../utils/axios'
 import { UserDataContext } from '../context/UserContext'
 
 const UserSignup = () => {
@@ -69,7 +69,7 @@ const UserSignup = () => {
       // Log form data for debugging
       console.log('Form Data:', data)
 
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users/register`, formData, {
+      const response = await axiosInstance.post('/api/users/register', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Accept': 'application/json'

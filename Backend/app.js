@@ -18,25 +18,22 @@ connectToDb();
 // Middleware
 app.use(cors({
     origin: function(origin, callback) {
-        // Allow all origins in development mode
-        if (process.env.NODE_ENV !== 'production') {
+        // For development or testing environments, allow all origins
+        if (!origin || process.env.NODE_ENV === 'development') {
             return callback(null, true);
         }
         
         const allowedOrigins = [
-            'http://localhost:5173', 
+            'http://localhost:5173',
             'http://localhost:5174',
             'https://mayank-murex.vercel.app',
             'https://mayank-5.onrender.com',
-            'https://graceful-chaja-df272e.netlify.app'
+            'https://graceful-chaja-df272e.netlify.app',
+            'https://final-uber-6.onrender.com'
         ];
         
-        // Log the origin for debugging
-        console.log('Request origin:', origin);
-        
-        // Allow requests with no origin (like mobile apps, curl requests)
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, origin);
         } else {
             console.log('CORS blocked origin:', origin);
             callback(new Error('Not allowed by CORS'));
@@ -49,20 +46,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-// Enable CORS for all origins fallback (comment this out when security is critical)
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    
-    // Handle preflight OPTIONS request
-    if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
-    }
-    next();
-});
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -112,18 +95,19 @@ app.get('/favicon.ico', (req, res) => {
 app.get('/debug', (req, res) => {
     res.status(200).json({
         status: 'ok',
-        nodeEnv: process.env.NODE_ENV,
+        nodeEnv: process.env.NODE_ENV || 'not set',
         headers: req.headers,
         cors: {
             allowedOrigins: [
-                'http://localhost:5173', 
+                'http://localhost:5173',
                 'http://localhost:5174',
                 'https://mayank-murex.vercel.app',
                 'https://mayank-5.onrender.com',
-                'https://graceful-chaja-df272e.netlify.app'
+                'https://graceful-chaja-df272e.netlify.app',
+                'https://final-uber-6.onrender.com'
             ],
-            fallbackEnabled: true,
-            mode: process.env.NODE_ENV !== 'production' ? 'development' : 'production'
+            developmentMode: process.env.NODE_ENV === 'development',
+            mode: process.env.NODE_ENV || 'not set'
         },
         routes: {
             userRoutes: '/api/users',

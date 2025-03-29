@@ -112,7 +112,13 @@ module.exports.loginUser = async (req, res, next) => {
 
     const token = user.generateAuthToken();
 
-    res.cookie('token', token);
+    // Set cookie with appropriate options for cross-origin requests
+    res.cookie('token', token, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
 
     res.status(200).json({ token, user });
 }
@@ -125,7 +131,11 @@ module.exports.getUserProfile = async (req, res, next) => {
 
 module.exports.logoutUser = async (req, res, next) => {
     try {
-        res.clearCookie('token');
+        res.clearCookie('token', {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
+        });
         // Skip blacklisting for now
         // const token = req.cookies.token || (req.headers.authorization ? req.headers.authorization.split(' ')[ 1 ] : null);
         // if (token) {

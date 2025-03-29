@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { UserDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../utils/axios'
 
 const UserProtectWrapper = ({
     children
@@ -20,12 +20,7 @@ const UserProtectWrapper = ({
             }
 
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/users/profile`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                    withCredentials: true
-                })
+                const response = await axiosInstance.get('/api/users/profile')
 
                 if (response.status === 200) {
                     setUser(response.data)

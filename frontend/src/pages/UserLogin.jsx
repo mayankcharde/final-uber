@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { UserDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../utils/axios'
 
 const UserLogin = () => {
   const [ email, setEmail ] = useState('')
@@ -24,14 +24,15 @@ const UserLogin = () => {
         password: password
       }
 
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users/login`, userData, {
-        withCredentials: true
-      })
+      const response = await axiosInstance.post('/api/users/login', userData)
 
       if (response.status === 200) {
         const data = response.data
         setUser(data.user)
+        
+        // Store token in localStorage
         localStorage.setItem('token', data.token)
+        
         navigate('/home')
       }
     } catch (err) {
@@ -73,8 +74,10 @@ const UserLogin = () => {
             onChange={(e) => {
               setPassword(e.target.value)
             }}
-            required type="password"
+            required 
+            type="password"
             placeholder='password'
+            autocomplete="current-password"
           />
 
           {error && (

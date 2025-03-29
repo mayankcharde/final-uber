@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../utils/axios'
 import { CaptainDataContext } from '../context/CapatainContext'
 
 const Captainlogin = () => {
@@ -24,7 +24,7 @@ const Captainlogin = () => {
         password: password
       }
 
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/captains/login`, captainData)
+      const response = await axiosInstance.post('/api/captains/login', captainData)
 
       if (response.status === 200) {
         const data = response.data
@@ -67,6 +67,7 @@ const Captainlogin = () => {
             className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
             type="email"
             placeholder='email@example.com'
+            autocomplete="email"
           />
 
           <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
@@ -80,6 +81,7 @@ const Captainlogin = () => {
             }}
             type="password"
             placeholder='password'
+            autocomplete="current-password"
           />
 
           <button
