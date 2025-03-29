@@ -120,7 +120,13 @@ module.exports.loginCaptain = async (req, res, next) => {
 
     const token = captain.generateAuthToken();
 
-    res.cookie('token', token);
+    // Set cookie with appropriate options for cross-origin requests
+    res.cookie('token', token, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
 
     res.status(200).json({ token, captain });
 }
@@ -137,7 +143,11 @@ module.exports.logoutCaptain = async (req, res, next) => {
         //     await blackListTokenModel.create({ token });
         // }
         
-        res.clearCookie('token');
+        res.clearCookie('token', {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
+        });
         res.status(200).json({ message: 'Logout successfully' });
     } catch (error) {
         console.error('Logout error:', error);

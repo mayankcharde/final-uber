@@ -1,16 +1,15 @@
 import axios from 'axios';
 
-// In development, use relative URLs to leverage Vite's proxy
-// In production, use the full URL from environment variables
-const isDevelopment = import.meta.env.DEV;
-const API_URL = isDevelopment ? '' : (import.meta.env.VITE_BASE_URL || 'https://final-uber-6.onrender.com');
+// Always use the full URL when in production
+const API_URL = 'https://final-uber-8.onrender.com';
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+  // Set withCredentials to false to avoid cookie issues
+  withCredentials: false,
 });
 
 // Add a request interceptor to add auth token to all requests
