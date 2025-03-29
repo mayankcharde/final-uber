@@ -1,6 +1,7 @@
 const captainModel = require('../models/captain.model');
 const captainService = require('../services/captain.service');
-const blackListTokenModel = require('../models/blackListToken.model');
+// Comment out the blacklist token model import for now
+// const blackListTokenModel = require('../models/blackListToken.model');
 const { validationResult } = require('express-validator');
 const rideModel = require('../models/ride.model');
 
@@ -130,11 +131,11 @@ module.exports.getCaptainProfile = async (req, res, next) => {
 
 module.exports.logoutCaptain = async (req, res, next) => {
     try {
-        const token = req.cookies.token || (req.headers.authorization ? req.headers.authorization.split(' ')[1] : null);
-        
-        if (token) {
-            await blackListTokenModel.create({ token });
-        }
+        // Skip blacklisting for now
+        // const token = req.cookies.token || (req.headers.authorization ? req.headers.authorization.split(' ')[1] : null);
+        // if (token) {
+        //     await blackListTokenModel.create({ token });
+        // }
         
         res.clearCookie('token');
         res.status(200).json({ message: 'Logout successfully' });
