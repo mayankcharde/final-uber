@@ -67,3 +67,48 @@ button:focus-visible {
   }
 } */
 @import "tailwindcss";
+
+/* Custom responsive styles */
+@layer utilities {
+  /* Mobile-specific adjustments */
+  @media (max-width: 640px) {
+    .mobile-panel {
+      padding-bottom: env(safe-area-inset-bottom, 16px);
+      max-height: 80vh;
+    }
+    
+    /* Fix for bottom panels on small screens */
+    .fixed.bottom-0 {
+      padding-bottom: env(safe-area-inset-bottom, 16px);
+    }
+    
+    /* Ensure buttons are large enough for touch */
+    button {
+      min-height: 44px;
+    }
+  }
+}
+
+/* Fix for bottom sheets and modals */
+.bottom-sheet {
+  max-height: 90vh;
+  overflow-y: auto;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure content doesn't overflow on small screens */
+.scrollable-content {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for sticky buttons at the bottom */
+.sticky-bottom {
+  position: sticky;
+  bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+  background-color: white;
+  z-index: 10;
+}
