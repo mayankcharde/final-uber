@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Clone API Server</title>
+    <link rel="icon" href="data:,">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #111;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .endpoint {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 4px;
+            border-left: 4px solid #000;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <img class="logo" src="https://www.svgrepo.com/show/505031/uber-driver.svg" alt="Uber Clone Logo">
+    <h1>Uber Clone API Server</h1>
+    
+    <div class="card">
+        <div class="status">ONLINE</div>
+        <p>The API server is running successfully. This is the backend for the Uber Clone application.</p>
+    </div>
+
+    <h2>API Documentation</h2>
+    <p>Here are the available endpoints:</p>
+    
+    <div class="endpoint">
+        <code>GET /health</code> - Check server health status
+    </div>
+    
+    <div class="endpoint">
+        <code>GET /debug</code> - View API configuration details
+    </div>
+    
+    <div class="endpoint">
+        <code>POST /api/users/register</code> - Register a new user
+    </div>
+    
+    <div class="endpoint">
+        <code>POST /api/users/login</code> - User login
+    </div>
+    
+    <div class="endpoint">
+        <code>POST /api/captains/register</code> - Register a new captain
+    </div>
+    
+    <div class="endpoint">
+        <code>POST /api/captains/login</code> - Captain login
+    </div>
+    
+    <h2>Frontend Application</h2>
+    <p>Visit the frontend application at: <a href="https://mayank-murex.vercel.app" target="_blank">https://mayank-murex.vercel.app</a></p>
+    
+    <footer style="margin-top: 40px; text-align: center; font-size: 14px; color: #777;">
+        Uber Clone API &copy; 2023
+    </footer>
+</body>
+</html> 

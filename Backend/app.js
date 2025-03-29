@@ -46,9 +46,45 @@ app.use(cookieParser());
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Health check route
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', message: 'Server is running' });
+});
+
+// Root path handler (as a fallback if no static file is found)
+app.get('/', (req, res) => {
+    // Try to send the static HTML first, fall back to JSON if that fails
+    res.format({
+        html: () => {
+            res.sendFile(path.join(__dirname, 'public', 'index.html'));
+        },
+        json: () => {
+            res.status(200).json({
+                status: 'success',
+                message: 'Uber Clone API Server is running',
+                docs: 'Visit /debug for API information',
+                health: 'Visit /health for server status',
+                api: {
+                    users: '/api/users',
+                    captains: '/api/captains',
+                    maps: '/api/maps',
+                    rides: '/api/rides',
+                    payments: '/api/payments'
+                }
+            });
+        },
+        default: () => {
+            res.status(200).send('Uber Clone API Server is running');
+        }
+    });
+});
+
+// Favicon route
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end(); // No content response for favicon requests
 });
 
 // Debug route
@@ -93,31 +129,63 @@ app.use('/api/maps', mapsRoutes);
 app.use('/api/rides', rideRoutes);
 app.use('/api/payments', paymentRoutes);
 
-// 404 handler
-app.use((req, res) => {
-    console.log(`404 Not Found: ${req.method} ${req.originalUrl}`);
-    res.status(404).json({ 
-        message: 'Route not found',
-        path: req.originalUrl,
-        method: req.method,
-        supportedRoutes: [
-            '/health',
-            '/debug',
-            '/api/users/*',
-            '/api/captains/*',
-            '/api/maps/*',
-            '/api/rides/*',
-            '/api/payments/*'
-        ]
-    });
-});
-
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(err.status || 500).json({
         message: err.message || 'Internal Server Error',
         ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
+});
+
+// 404 handler - should be AFTER all other routes
+app.use((req, res) => {
+    console.log(`404 Not Found: ${req.method} ${req.originalUrl}`);
+    
+    // Respond based on the requested format
+    res.format({
+        html: () => {
+            res.status(404).send(`
+                <html>
+                    <head>
+                        <title>404 - Not Found</title>
+                        <style>
+                            body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+                            h1 { color: #333; }
+                            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                            .btn { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <h1>404 - Page Not Found</h1>
+                            <p>The page you're looking for doesn't exist.</p>
+                            <a class="btn" href="/">Back to Home</a>
+                        </div>
+                    </body>
+                </html>
+            `);
+        },
+        json: () => {
+            res.status(404).json({ 
+                message: 'Route not found',
+                path: req.originalUrl,
+                method: req.method,
+                supportedRoutes: [
+                    '/',
+                    '/health',
+                    '/debug',
+                    '/api/users/*',
+                    '/api/captains/*',
+                    '/api/maps/*',
+                    '/api/rides/*',
+                    '/api/payments/*'
+                ]
+            });
+        },
+        default: () => {
+            res.status(404).send('404 - Not Found');
+        }
     });
 });
 
