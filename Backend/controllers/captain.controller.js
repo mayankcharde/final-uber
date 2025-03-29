@@ -129,13 +129,19 @@ module.exports.getCaptainProfile = async (req, res, next) => {
 }
 
 module.exports.logoutCaptain = async (req, res, next) => {
-    const token = req.cookies.token || req.headers.authorization?.split(' ')[ 1 ];
-
-    await blackListTokenModel.create({ token });
-
-    res.clearCookie('token');
-
-    res.status(200).json({ message: 'Logout successfully' });
+    try {
+        const token = req.cookies.token || (req.headers.authorization ? req.headers.authorization.split(' ')[1] : null);
+        
+        if (token) {
+            await blackListTokenModel.create({ token });
+        }
+        
+        res.clearCookie('token');
+        res.status(200).json({ message: 'Logout successfully' });
+    } catch (error) {
+        console.error('Logout error:', error);
+        res.status(500).json({ message: 'Error during logout' });
+    }
 }
 
 module.exports.getCaptainEarnings = async (req, res) => {

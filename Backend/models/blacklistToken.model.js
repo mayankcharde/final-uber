@@ -13,4 +13,5 @@ const blackListTokenSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('BlackListToken', blackListTokenSchema); 
+// Explicitly set the collection name to avoid case sensitivity issues
+module.exports = mongoose.model('BlackListToken', blackListTokenSchema, 'blackListTokens'); 
